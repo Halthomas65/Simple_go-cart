@@ -3,26 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-// This script is attached to the player game objects
-public class Sync : MonoBehaviourPun, IPunObservable
+public class CarSync : MonoBehaviourPun, IPunObservable
 {
-    public MonoBehaviour[] localScripts; 
-    public GameObject[] localObjects;
-    [SerializeField] Rigidbody r;    // Biến để lưu trữ thành phần Rigidbody của đối tượng
-    Vector3 latestPos;  // Vị trí mới nhất được nhận từ mạng
-    Quaternion latestRot;   // Góc quay mới nhất được nhận từ mạng
-    Vector3 latestVelocity; // Vận tốc mới nhất được nhận từ mạng
-    Vector3 latestAngularVelocity;  // Vận tốc góc mới nhất được nhận từ mạng
-    
+    public MonoBehaviour[] localScripts; //Scripts that should only be enabled for the local player (Ex. Car controller)
+    public GameObject[] localObjects; //Objects that should only be active for the local player (Ex. Camera)
+    public Transform[] wheels; //Car wheel transforms
+
+    Rigidbody r;
+    // Values that will be synced over network
+    Vector3 latestPos;
+    Quaternion latestRot;
+    Vector3 latestVelocity;
+    Vector3 latestAngularVelocity;
+    Quaternion[] wheelRotations = new Quaternion[0];
+    // Lag compensation
     float currentTime = 0;
-    double currentPacketTime = 0;   // Thời gian ghi ở gói tin hiện tại
-    double lastPacketTime = 0;  // Thời gian nhận được gói tin trước đó
-    
+    double currentPacketTime = 0;
+    double lastPacketTime = 0;
     Vector3 positionAtLastPacket = Vector3.zero;
     Quaternion rotationAtLastPacket = Quaternion.identity;
     Vector3 velocityAtLastPacket = Vector3.zero;
     Vector3 angularVelocityAtLastPacket = Vector3.zero;
-    
+
+    // Use this for initialization
     void Awake()
     {
         r = GetComponent<Rigidbody>();
@@ -36,7 +39,7 @@ public class Sync : MonoBehaviourPun, IPunObservable
             localObjects[i].SetActive(photonView.IsMine);
         }
     }
-    
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
@@ -46,6 +49,13 @@ public class Sync : MonoBehaviourPun, IPunObservable
             stream.SendNext(transform.rotation);
             stream.SendNext(r.velocity);
             stream.SendNext(r.angularVelocity);
+
+            wheelRotations = new Quaternion[wheels.Length];
+            for(int i = 0; i < wheels.Length; i++)
+            {
+                wheelRotations[i] = wheels[i].localRotation;
+            }
+            stream.SendNext(wheelRotations);
         }
         else
         {
@@ -54,6 +64,8 @@ public class Sync : MonoBehaviourPun, IPunObservable
             latestRot = (Quaternion)stream.ReceiveNext();
             latestVelocity = (Vector3)stream.ReceiveNext();
             latestAngularVelocity = (Vector3)stream.ReceiveNext();
+            wheelRotations = (Quaternion[])stream.ReceiveNext();
+
             // Lag compensation
             currentTime = 0.0f;
             lastPacketTime = currentPacketTime;
@@ -64,18 +76,30 @@ public class Sync : MonoBehaviourPun, IPunObservable
             angularVelocityAtLastPacket = r.angularVelocity;
         }
     }
+
+    // Update is called once per frame
     void Update()
     {
         if (!photonView.IsMine)
         {
-        
+            // Lag compensation
             double timeToReachGoal = currentPacketTime - lastPacketTime;
             currentTime += Time.deltaTime;
 
-			transform.position = Vector3.Lerp(positionAtLastPacket, latestPos, (float)(currentTime / timeToReachGoal));
+            // Update car position and velocity
+            transform.position = Vector3.Lerp(positionAtLastPacket, latestPos, (float)(currentTime / timeToReachGoal));
             transform.rotation = Quaternion.Lerp(rotationAtLastPacket, latestRot, (float)(currentTime / timeToReachGoal));
             r.velocity = Vector3.Lerp(velocityAtLastPacket, latestVelocity, (float)(currentTime / timeToReachGoal));
             r.angularVelocity = Vector3.Lerp(angularVelocityAtLastPacket, latestAngularVelocity, (float)(currentTime / timeToReachGoal));
+
+            //Apply wheel rotation
+            if(wheelRotations.Length == wheels.Length)
+            {
+                for (int i = 0; i < wheelRotations.Length; i++)
+                {
+                    wheels[i].localRotation = Quaternion.Lerp(wheels[i].localRotation, wheelRotations[i], Time.deltaTime * 6.5f);
+                }
+            }
         }
     }
 }
