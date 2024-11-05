@@ -12,7 +12,7 @@ public class CarController : MonoBehaviour
     public Transform WheelRLTrans;
     public Transform WheelRRTrans;
     public float steeringAngle = 45;
-    public float maxTorque = 1000; 
+    public float maxTorque = 1000;
     public float maxBrakeTorque = 500;
     public Transform centerOfMass;
 
