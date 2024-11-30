@@ -4,7 +4,7 @@ using Photon.Pun;
 public class RoomController : MonoBehaviourPunCallbacks
 {
     //Player instance prefab, must be located in the Resources folder
-    public GameObject playerPrefab;
+    public GameObject[] playerPrefabs;
     //Player spawn point
     public Transform[] spawnPoints;
     string lobbyScene = "GameLobby";
@@ -18,14 +18,10 @@ public class RoomController : MonoBehaviourPunCallbacks
             return;
         }
         //We're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-        // StartCoroutine(DelayedPlayerInstantiation());
-        PhotonNetwork.Instantiate(playerPrefab.name, spawnPoints[Random.Range(0, spawnPoints.Length - 1)].position, spawnPoints[Random.Range(0, spawnPoints.Length - 1)].rotation, 0);
+        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length - 1)];
+        PhotonNetwork.Instantiate(playerPrefabs[Random.Range(0, playerPrefabs.Length - 1)].name, spawnPoint.position, spawnPoint.rotation, 0);
     }
-    // private IEnumerator DelayedPlayerInstantiation()
-    // {
-    //     yield return new WaitForSeconds(2.0f);
-    //     PhotonNetwork.Instantiate(playerPrefab.name, spawnPoints[Random.Range(0, spawnPoints.Length - 1)].position, spawnPoints[Random.Range(0, spawnPoints.Length - 1)].rotation, 0);
-    // }
+    
     void OnGUI()
     {
         if (PhotonNetwork.CurrentRoom == null)

@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             BallController ball = collision.gameObject.GetComponent<BallController>();
             if (ball != null)
             {
-                ball.TeleportBallToRandomSpawnPoint();
+                ball.TeleportBall();
             }
         }
     }

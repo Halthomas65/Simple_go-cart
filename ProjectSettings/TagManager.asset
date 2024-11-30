@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - InnerBound
+  - OuterBound
+  - Ball
   layers:
   - Default
   - TransparentFX
