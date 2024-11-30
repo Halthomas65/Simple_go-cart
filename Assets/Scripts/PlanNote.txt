@@ -12,4 +12,4 @@ After starting, the players have 1 minute before GAME OVER.
 
 Winning:
 - The players with the highest score after GAME OVER wins
-- The last player standing before the time end wins.
+- The last player standing before the time end wins. (Add later)

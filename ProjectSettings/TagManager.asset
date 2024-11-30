@@ -8,6 +8,8 @@ TagManager:
   - InnerBound
   - OuterBound
   - Ball
+  - OuterPlane
+  - Center
   layers:
   - Default
   - TransparentFX

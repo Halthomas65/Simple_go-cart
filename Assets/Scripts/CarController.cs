@@ -16,7 +16,6 @@ public class CarController : MonoBehaviour
     public float maxBrakeTorque = 500;
     public Transform centerOfMass;
 
-    float gravity = 9.8f;
     bool braked = false;
     Rigidbody rb;
 
