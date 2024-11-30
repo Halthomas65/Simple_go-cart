@@ -559,6 +559,8 @@ GameObject:
   - component: {fileID: 5304094399458606233}
   - component: {fileID: 5142110922046723713}
   - component: {fileID: 3324590757090482756}
+  - component: {fileID: 7341583772618356295}
+  - component: {fileID: 1296454100568203528}
   m_Layer: 0
   m_Name: CarRoot (3)
   m_TagString: Untagged
@@ -639,6 +641,50 @@ MonoBehaviour:
   maxTorque: 1000
   maxBrakeTorque: 500
   centerOfMass: {fileID: 4860983160141982510}
+--- !u!114 &7341583772618356295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3471762581656432534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3076df8bf0a5fb1458c2618af50e5a51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localScripts:
+  - {fileID: 3324590757090482756}
+  localObjects:
+  - {fileID: 3122262418885858204}
+  wheels:
+  - {fileID: 4006724483392809618}
+  - {fileID: 2282967273544355718}
+  - {fileID: 5830947686796002148}
+  - {fileID: 5778408441669524281}
+--- !u!114 &1296454100568203528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3471762581656432534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 7341583772618356295}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &3743048430610326179
 GameObject:
   m_ObjectHideFlags: 0

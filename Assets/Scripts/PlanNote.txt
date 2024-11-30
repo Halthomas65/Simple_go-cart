@@ -1,6 +1,6 @@
 Car collecting balls
 
-A player get in the center of the and press Enter to start play.
+A player get in the center of the room and press Enter to start play.
 After starting, the players have 1 minute before GAME OVER.
 
 - There are 5 balls in the field all the time. The balls always stay in the field.
