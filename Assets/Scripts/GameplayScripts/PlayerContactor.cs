@@ -1,11 +1,15 @@
 using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerContactor : MonoBehaviour
+public class PlayerContactor : MonoBehaviourPunCallbacks
 {
     int playerId;
     int playerScore;
-    public AudioClip nearBoundWarning;
+    public AudioSource audioSource;
+    public AudioClip nearBoundWarning,
+                hitBallSound,
+                dieSound;
 
     void Start()
     {
@@ -18,15 +22,11 @@ public class PlayerContactor : MonoBehaviour
         // - Every time a player touch a ball, they get 1 point and the ball will be teleported to another spot.
         if (other.CompareTag("Ball"))
         {
+            audioSource.PlayOneShot(hitBallSound);
+
             playerScore++;
             // Teleport the ball to another spot
             other.GetComponent<BallController>().TeleportBall();
-        }
-        else if (other.CompareTag("InnerBound"))
-        {
-            // Play near bound warning sound using player's audio source
-            AudioSource audioSource = other.GetComponent<AudioSource>();
-            audioSource.PlayOneShot(nearBoundWarning);
         }
     }
 
@@ -35,13 +35,29 @@ public class PlayerContactor : MonoBehaviour
         if (other.CompareTag("OuterBound"))
         {
             // Player died, show score summary screen
-            // Assuming you have a method named ShowScoreSummaryScreen()
-            // ShowScoreSummaryScreen();
+            Die();
+        }
+        else if (other.CompareTag("InnerBound"))
+        {            
+            // Play near bound warning sound using player's audio source
+            audioSource.PlayOneShot(nearBoundWarning);
         }
     }
 
     void Die()
     {
+        // Find the Main camera and let it play the die sound
+        AudioSource camAudio = Camera.main.GetComponent<AudioSource>();
+        if (camAudio!= null)
+        {
+            camAudio.PlayOneShot(dieSound);
+        }
+        else{
+            camAudio = Camera.main.AddComponent<AudioSource>();
+            camAudio.PlayOneShot(dieSound);
+        }
+        
+
         // Disable this gameobject
         gameObject.SetActive(false);
 

@@ -7,7 +7,7 @@ After starting, the players have 1 minute before GAME OVER.
 - Every time a player touch a ball, they get 1 point and the ball will be teleported to another spot.
 - A field has 2 bounds. 
     + If a player leaves the 1st bound, they get a sound warning.
-    + If a player leaves the 2nd bound, they died and enter specter mode with only their camera active. we will code their movements in specter mode later.
+    + If a player leaves the 2nd bound, they died and see score summary screen
 - After 1 minute, it's GAME OVER for everyone.
 
 Winning:
