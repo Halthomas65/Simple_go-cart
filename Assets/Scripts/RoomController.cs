@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 public class RoomController : MonoBehaviourPunCallbacks
 {
     //Player instance prefab, must be located in the Resources folder
@@ -8,6 +9,7 @@ public class RoomController : MonoBehaviourPunCallbacks
     //Player spawn point
     public Transform[] spawnPoints;
     string lobbyScene = "GameLobby";
+
     void Start()
     {
         //In case we started this demo with the wrong scene being active, simply load the menu scene
@@ -18,10 +20,19 @@ public class RoomController : MonoBehaviourPunCallbacks
             return;
         }
         //We're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+        StartCoroutine(LateSpawn());
+    }
+
+    IEnumerator LateSpawn()
+    {
+        yield return new WaitForSeconds(2);
+
+        //We're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
         Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length - 1)];
         PhotonNetwork.Instantiate(playerPrefabs[Random.Range(0, playerPrefabs.Length - 1)].name, spawnPoint.position, spawnPoint.rotation, 0);
+
     }
-    
+
     void OnGUI()
     {
         if (PhotonNetwork.CurrentRoom == null)
@@ -43,7 +54,15 @@ public class RoomController : MonoBehaviourPunCallbacks
             string isMasterClient = (PhotonNetwork.PlayerList[i].IsMasterClient ? ": MasterClient" : "");
             GUI.Label(new Rect(5, 35 + 30 * i, 200, 25), PhotonNetwork.PlayerList[i].NickName + isMasterClient);
         }
+
+        // Show Current Game state of the room
+        // Show the remaining time from the GameManager at the upper center of the screen
+        GUI.Label(new Rect(Screen.width / 2, 5, 200, 25), "REMAINING TIME: " + GameManager.Instance.GetRemainingTime() + "s");
+        
+        // Show current score of the current player at the bottom left of the screen
+        GUI.Label(new Rect(5, Screen.height - 30, 200, 25), "Score: " + ScoreManager.Instance.GetScore(PhotonNetwork.LocalPlayer.ActorNumber));        
     }
+
     public override void OnLeftRoom()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(lobbyScene);

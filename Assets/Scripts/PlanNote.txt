@@ -13,3 +13,9 @@ After starting, the players have 1 minute before GAME OVER.
 Winning:
 - The players with the highest score after GAME OVER wins
 - The last player standing before the time end wins. (Add later)
+
+Needed scripts:
+- ScoreManager: Singleton. Manage the scores of the players
+- GameManger: Singleton. Manage the start and end of the game
+- ScoreBoard: Photon Network. ShowScoreSummaryScreen. Show the score of the players in the room for the current player when they died. 
+ScoreBoard Displays: room name, player id, player name, list of player in the room (columns: playerId, player name, score, state - dead/alive, Winner). the player list here is sorted in descending order according to the scores.

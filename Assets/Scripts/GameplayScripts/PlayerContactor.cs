@@ -15,6 +15,13 @@ public class PlayerContactor : MonoBehaviour
         // Assign a unique ID for each player
         playerId = PhotonNetwork.LocalPlayer.ActorNumber;
 
+        // Check if ScoreManager instance is null
+        if (ScoreManager.Instance == null)
+        {
+            Debug.LogError("ScoreManager instance is null. Please ensure the ScoreManager prefab is added to the scene.");
+            return;
+        }
+
         // Add the player to the ScoreManager
         ScoreManager.Instance.AddPlayer(playerId);
     }
@@ -22,8 +29,11 @@ public class PlayerContactor : MonoBehaviour
     void FixedUpdate()
     {
         // start Game
+        // Check if the player is masterClient
+        // bool isMasterClient = PhotonNetwork.IsMasterClient;
+
         // Get input enter key
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return)) // && isMasterClient)
         {
             GameManager.Instance.StartGame();
         }
@@ -70,9 +80,12 @@ public class PlayerContactor : MonoBehaviour
             camAudio.PlayOneShot(dieSound);
         }
 
+        // Set the player state in the ScoreManager to dead
+        ScoreManager.Instance.UpdateState(playerId, false);
+
         // Disable this gameobject
         gameObject.SetActive(false);
 
-        // ShowScoreSummaryScreen();
+        // TODO: ShowScoreSummaryScreen();
     }
 }

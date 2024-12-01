@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameState CurrentState { get; private set; }
     
     public GameObject scoreSummaryScreen;
+    public GameObject [] balls;
 
     private float gameTime;
     private float startTime = 60f; // 1 minute
@@ -45,6 +46,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         CurrentState = GameState.Playing;
+        ReleaseBalls();
+    }
+
+    // Set the balls active
+    void ReleaseBalls()
+    {
+        foreach (var ball in balls)
+        {
+            ball.SetActive(true);
+        }
     }
 
     public bool IsGameOver()
